@@ -14,4 +14,7 @@ struct arg{
 void urand(int *,int);
 int usum(int *,int);
 void show(int *,int);
+void bsort(int *,int);
+int compar(const void *,const void *);
+void compar_b_q_sort(int *,int);
 struct arg count(int*,int);

@@ -5,6 +5,7 @@ void main(){
 	int m[NUMBER];	
 	urand(m,NUMBER);
 	show(m,NUMBER);
+	compar_b_q_sort(m,NUMBER);
 	printf("sum=%d\n",usum(m,NUMBER));
 	k=count(m,NUMBER);
 	printf("suum=%d,ave=%f\n",k.sum,k.ave);
