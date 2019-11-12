@@ -5,7 +5,7 @@ int g=88;
 int main(){
 	int v=99;
 	pid_t pid;
-	pid=fork();
+	pid=vfork();//换成foke()结果不同
 	if(pid<0){
 		perror("fork failed!");
 		exit(-1);
@@ -15,6 +15,7 @@ int main(){
 		v++;
 		printf("child:pid=%d,g=%d,v=%d",getpid(),g,v);
 		_exit(0);
+		//return 0;
 	}
 	else{
 		printf("return value=%d\n",pid);
