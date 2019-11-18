@@ -16,7 +16,7 @@ int main(){
 		g=100;
 		s=200;
 		k=300;
-		execl("./pro1","pro1",NULL);
+		//execl("./pro1","pro1",NULL);
 		printf("child after g=%d,s=%d,k=%d\n",g,s,k);
 		exit(12);
 	}
