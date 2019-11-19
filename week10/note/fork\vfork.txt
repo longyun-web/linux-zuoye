@@ -1,0 +1,76 @@
+.fork函数介绍
+
+#include <sys/types.h>
+
+#include <unistd.h>
+
+pid_t fork (void );
+
+正确返回：父进程中返回子进程的进程号；子进程中返回0；（单调用双返回函数）
+错误返回：-1；
+
+子进程是父进程的一个拷贝。具体说，子进程从父进程那得到了数据段和堆栈段，但不是与父进程共享而是单独分配内存。fork函数返回后，子进程和父进程都是从fork函数的下一条语句开始执行。
+
+实例代码：
+
+int glob=6; 
+int main()  
+{
+	int var;
+	pid_t pid;
+	var=88;
+	printf("before vfork\n");
+	if((pid=fork())<0){
+		perror("create failure");
+	}else if(pid==0){
+		glob++;
+		var++;
+	}else{
+		sleep(2);
+	}
+	printf("pid=%d,glob=%d,var=%d\n",getpid(),glob,var); 
+	return 0;  
+} 
+
+运行结果:
+
+
+before vfork
+pid=3402,glob=7,var=89
+pid=3401,glob=6,var=88
+./a.out>tmp.out | cat  tmp.out的运行结果：
+before vfork
+pid=3410,glob=7,var=89
+before vfork
+pid=3408,glob=6,var=88
+
+2 vfork函数的介绍
+
+vfork创建新进程的主要目的在于用exec函数执行另外的程序，实际上，在没调用exec或exit之前子进程的运行中是与父进程共享数据段的。在vfork调用中，子进程先运行，父进程挂起，直到子进程调用exec或exit，在这以后，父子进程的执行顺序不再有限制。vfork执行过程为：它产生的子进程刚开始暂时与父进程共享地址空间（其实就是线程的概念了），因为这时候子进程在父进程的地址空间中运行，所以子进程不能进行写操作，并且在儿子“霸占”着老子的房子时候，要委屈老子一下了，让他在外面歇着（阻塞），一旦儿子执行了exec或者exit后，相当于儿子买了自己的房子了，这时候就相当于分家了。
+
+
+代码：
+
+int glob=6; 
+int main()  
+{
+	int var;
+	pid_t pid;
+	var=88;
+	printf("before vfork\n");
+	if((pid=vfork())<0){
+		perror("create failure");
+	}else if(pid==0){
+		glob++;
+		var++;
+		_exit(0);
+	}
+	printf("pid=%d,glob=%d,var=%d\n",getpid(),glob,var); 
+	return 0;
+}  
+
+运行结果
+
+before vfork
+
+pid=3373,glob=7,var=89
